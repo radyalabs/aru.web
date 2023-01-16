@@ -1,0 +1,119 @@
+﻿@model Trisatech.MWorkforce.Cms.ViewModels.ContactViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section CustomScripts{
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            var errorMessage = '@ViewBag.ErrorMessage';
+            if (errorMessage != '') {
+                $('#errMessageTxt').text(errorMessage);
+                $('#failedDialog').modal('show');
+            }
+        });
+    </script>
+}
+
+<div class="page-content">
+    <!-- BEGIN PAGE HEADER-->
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="#">Contact</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Manage Contact</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Update Contact</a>
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+	<!-- BEGIN PAGE HEAD -->
+    <div class="page-head">
+        <!-- BEGIN PAGE TITLE -->
+        <div class="page-title">
+            <h1>Update Contact</h1>
+        </div>
+        <!-- END PAGE TITLE -->
+    </div>
+    <!-- END PAGE HEAD -->
+    <!-- END PAGE HEADER-->
+    <!-- BEGIN PAGE CONTENT-->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                @*<div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject bold uppercase">Update customer</span>
+                    </div>
+                </div>*@
+                <div class="portlet-body form">
+                    <form asp-action="edit" class="form-horizontal form-row-seperated">
+                        <div class="form-body">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="ContactName" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="ContactName" class="form-control" />
+                                    <span asp-validation-for="ContactName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Position" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="Position" class="form-control" />
+                                    <span asp-validation-for="Position" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="ContactNumber" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="ContactNumber" type="number" class="form-control" />
+                                    <span asp-validation-for="ContactNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Email" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="Email" type="email" class="form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="SecondaryEmail" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="SecondaryEmail" type="email"  class="form-control" />
+                                    <span asp-validation-for="SecondaryEmail" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Remarks" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="Remarks" class="form-control" />
+                                    <span asp-validation-for="Remarks" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-actions">
+                            <div class="row">
+								<div class="col-md-offset-3 col-md-9">
+									<a class="btn btn-padd2 grey-cascade" asp-action="index">Cancel</a>
+									<button type="submit" class="btn btn-padd2 green" style="margin-left: 10px;">Submit</button>
+								</div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- END FORM-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE CONTENT-->
+</div>

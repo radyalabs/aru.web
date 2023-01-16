@@ -1,0 +1,245 @@
+﻿@model Trisatech.MWorkforce.Business.Entities.UserModel
+@using Trisatech.AspNet.Common.Extensions
+@using System.Globalization;
+@using Trisatech.MWorkforce.Cms.Helpers
+@using Trisatech.MWorkforce.Cms.ViewModels
+
+@{
+	ViewData["Title"] = "Details";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section CustomScripts{
+	<script type="text/javascript">
+        jQuery(document).ready(function () {
+            var errorMessage = '@TempData["ErrorMessage"]';
+            if (errorMessage != '') {
+                $('#errMessageTxt').text(errorMessage);
+                $('#alertModal-error').modal('show');
+            }
+        });
+	</script>
+}
+
+<div class="page-content">
+	<!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+	<!-- Approve Alert -->
+	<form asp-action="delete">
+		<div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="pos_middle">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content">
+						<div class="modal-body" style="padding: 20px 25px;">
+							<h4 class="text-center font-grey-gallery" style="font-weight: 600;">Are you sure to delete this ?</h4>
+							<br />
+							<input type="hidden" value="@Model.UserId" name="id" />
+							<div class="row">
+								<div class="col-md-6">
+									<button type="submit" class="btn btn-block green uppercase" data-backdrop="static" data-keyboard="false">Yes</button>
+								</div>
+								<div class="col-md-6">
+									<a href="#" class="btn btn-block red uppercase" data-backdrop="static" data-keyboard="false" data-dismiss="modal">No</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+	</form>
+	<!-- Alert Notify Approved -->
+	<div class="modal fade" id="alertModal-error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="pos_middle">
+			<div class="modal-dialog modal-sm modal-notify">
+				<div class="modal-content">
+					<div class="modal-body">
+						<center><i class="fa fa-check-circle-o font-green"></i></center>
+						<br />
+						<h4 class="text-center font-grey-gallery" id="errMessageTxt"></h4>
+						<br />
+						<div class="row">
+							<div class="col-md-8 col-md-offset-2">
+								<button type="submit" class="btn btn-block blue" data-backdrop="static" data-keyboard="false" data-dismiss="modal">Ok</button>
+							</div>
+						</div>
+						<br />
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+	<!-- BEGIN PAGE HEADER-->
+	<!-- BEGIN PAGE BREADCRUMB -->
+	<ul class="page-breadcrumb breadcrumb">
+		<li>
+			<a href="#">Home</a>
+			<i class="fa fa-circle"></i>
+		</li>
+		<li>
+			<a href="#">Manage User</a>
+			<i class="fa fa-circle"></i>
+		</li>
+		<li>
+			<a href="#">Data User Info</a>
+		</li>
+	</ul>
+	<!-- END PAGE BREADCRUMB -->
+	<!-- BEGIN PAGE HEAD -->
+	<div class="page-head">
+		<!-- BEGIN PAGE TITLE -->
+		<div class="page-title" style="margin-left: 12px;" >
+			<h1>Data User Info</h1>
+		</div>
+		<!-- END PAGE TITLE -->
+	</div>
+	<!-- END PAGE HEAD -->
+	<!-- END PAGE HEADER-->
+	<!-- BEGIN PAGE CONTENT-->
+	<div class="row">
+		<div class="col-md-12">
+			<div class="content-detail">
+				<!-- Data User -->
+				<div class="portlet light bordered">
+					<div class="portlet-title  text-right">
+						<!-- ACTION BUTTON-->
+						<div class="caption col-md-12">
+							<div class="row">
+								<div class="col-md-12">
+									<a class="btn btn-padd2 red" data-backdrop="static" data-keyboard="false" data-dismiss="modal" data-toggle="modal" data-target="#confirmDelete" href="#confirmDelete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+									<a class="btn btn-padd2 green" asp-action="edit" asp-controller="usermanagement" asp-route-id="@Model.UserId"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+								</div>
+							</div>
+						</div>
+						<!--END ACTION BUTTON-->
+					</div>
+					<div class="portlet-body form">
+						<div class="tabbable tabbable-tabdrop">
+							<ul class="nav nav-tabs cust-tabs2">
+								<li class="active">
+									<a href="#tab0" data-toggle="tab">Info</a>
+								</li>
+								<li>
+									<a href="#tab1" data-toggle="tab">List Territory</a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane fade active in" id="tab0">
+									<!-- BEGIN FORM-->
+									<form action="#" class="form-horizontal">
+										<div class="portlet-body form">
+											<div class="form-horizontal form-row-seperated">
+												<div class="form-body">
+													<div class="form-group">
+														<label class="control-label col-md-3">Fullname</label>
+														<div class="col-md-5">
+															<label class="control-label" style="color:black;">@Model.Name</label>
+															<span class="text-danger"></span>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-3">Username</label>
+														<div class="col-md-5">
+															<label class="control-label" style="color:black;">@Model.UserName</label>
+															<span class="text-danger"></span>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-3">Role code</label>
+														<div class="col-md-5">
+															<label class="control-label" style="color:black;">@Model.RoleCode</label>
+															<span class="text-danger"></span>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-3">Email</label>
+														<div class="col-md-5">
+															<label class="control-label" style="color:black;">@Model.UserEmail</label>
+															<span class="text-danger"></span>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-3">Phone number</label>
+														<div class="col-md-5">
+															<label class="control-label" style="color:black;">@Model.UserPhone</label>
+															<span class="text-danger"></span>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-3">User code</label>
+														<div class="col-md-5">
+															<label class="control-label" style="color:black;">@Model.UserCode</label>
+															<span class="text-danger"></span>
+														</div>
+													</div>
+													
+												</div>
+											</div>
+										</div>
+										<div class="form-actions text-right">
+											<div class="row">
+												<div class="col-md-offset-3 col-md-9">
+													<a class="btn btn-padd2 grey-cascade" asp-action="index">Back</a>
+												</div>
+											</div>
+										</div>
+									</form>
+									<!-- END FORM-->
+								</div>
+								<div class="tab-pane fade" id="tab1">
+									<div class="portlet-body cust-table">
+										<div class="table-scrollable">
+											<table class="table table-hover">
+												<thead>
+													<tr>
+														<th style="text-align: center">
+															No
+														</th>
+														<th>
+															Territory 
+														</th>
+
+
+													</tr>
+												</thead>
+												<tbody>
+													@if (Model.UserTerritories != null && Model.UserTerritories.Count > 0)
+													{
+														int i = 0;
+														foreach (var item in Model.UserTerritories)
+														{
+															i++;
+															<tr>
+																<td align="center">@i</td>
+																<td>
+																	<div class="status grey-cascade">
+
+																		@item.TerritoryName
+																	</div>
+																</td>
+																<td></td>
+
+
+															</tr>
+														}
+
+													}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						  </div>
+							
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>
+	<!-- END PAGE CONTENT-->
+</div>

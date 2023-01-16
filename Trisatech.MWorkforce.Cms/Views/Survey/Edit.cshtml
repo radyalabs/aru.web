@@ -1,0 +1,108 @@
+﻿@model Trisatech.MWorkforce.Cms.ViewModels.SurveyViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section CustomScripts{
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            var errorMessage = '@ViewBag.ErrorMessage';
+            if (errorMessage != '') {
+                $('#errMessageTxt').text(errorMessage);
+                $('#failedDialog').modal('show');
+            }
+        });
+    </script>
+}
+
+<div class="page-content">
+    <!-- BEGIN PAGE HEADER-->
+    <!-- BEGIN PAGE HEAD -->
+    
+    
+    <!-- END PAGE HEAD -->
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="#">Survey</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Manage survey</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Update survey</a>
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+	<!-- BEGIN PAGE TITLE -->
+    <div class="page-head">
+        <div class="page-title">
+            <h1>Survey</h1>
+        </div>
+    </div>
+        <!-- END PAGE TITLE -->
+        <!-- END PAGE HEADER-->
+        <!-- BEGIN PAGE CONTENT-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="portlet light bordered">
+                    @*<div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject bold ">Update survey</span>
+                        </div>
+                    </div>*@
+                    <div class="portlet-body form">
+                        <form asp-action="edit" class="form-horizontal form-row-seperated">
+                            <div class="form-body">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label asp-for="SurveyName" class="control-label col-md-3"></label>
+                                    <div class="col-md-5">
+                                        <input asp-for="SurveyName" class="form-control" />
+                                        <span asp-validation-for="SurveyName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="SurveyLink" class="control-label col-md-3"></label>
+                                    <div class="col-md-5">
+                                        <input asp-for="SurveyLink" class="form-control" />
+                                        <span asp-validation-for="SurveyLink" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="StartDate" class="control-label col-md-3"></label>
+                                    <div class="col-md-5">
+                                        <input asp-for="StartDate" type="date" class="form-control" />
+                                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="EndDate" class="control-label col-md-3"></label>
+                                    <div class="col-md-5">
+                                        <input asp-for="EndDate" type="date" class="form-control" />
+                                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <a class="btn btn-padd2 grey-cascade" asp-action="index">Cancel</a>
+                                        <button type="submit" class="btn btn-padd2 green" style="margin-left: 10px;">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- END FORM-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE CONTENT-->
+    </div>

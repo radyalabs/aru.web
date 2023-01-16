@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>3a37fc7a-a52a-4420-b410-91d30c6d8e40</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Trisatech.AspNet.Common\Trisatech.AspNet.Common.csproj" />
+    <ProjectReference Include="..\Trisatech.MWorkforce.Business\Trisatech.MWorkforce.Business.csproj" />
+    <ProjectReference Include="..\Trisatech.MWorkforce.Domain\Trisatech.MWorkforce.Domain.csproj" />
+    <ProjectReference Include="..\Trisatech.MWorkforce.Infrastructure\Trisatech.MWorkforce.Infrastructure.csproj" />
+    <ProjectReference Include="..\Trisatech.MWorkforce.Persistence.PostgreSQL\Trisatech.MWorkforce.Persistence.PostgreSQL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+</Project>

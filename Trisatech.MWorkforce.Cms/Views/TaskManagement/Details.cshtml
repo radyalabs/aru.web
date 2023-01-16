@@ -1,0 +1,447 @@
+﻿@model Trisatech.MWorkforce.Business.Entities.AssignmentModel
+@using Trisatech.AspNet.Common.Extensions
+@using System.Globalization;
+@using Trisatech.MWorkforce.Cms.Helpers
+@using Trisatech.MWorkforce.Cms.ViewModels
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    CultureInfo idn = new CultureInfo("id-ID");
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/lib/select2-old/select2.css" />
+    <link rel="stylesheet" type="text/css" href="~/lib/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" />
+}
+
+@section Scripts{
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <script type="text/javascript" src="~/lib/select2/js/select2.min.js"></script>
+    <script type="text/javascript" src="~/lib/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://maps.google.com/maps/api/js?key=@ViewBag.GoogleMapsKey" type="text/javascript"></script>
+    <script src="~/lib/plugins/gmaps/gmaps.min.js" type="text/javascript"></script>
+    <!-- END PAGE LEVEL PLUGINS -->
+}
+
+@section CustomScripts{
+    <script src="~/js/maps-google.js" type="text/javascript"></script>
+    <script>
+        var baseUrl = '@SiteHelper.GetBaseUrl(this.Context.Request)';
+        jQuery(document).ready(function () {
+            var name = '@Model.AssignmentName';
+            var lat = @(Model.Latitude == null ? 0 : Model.Latitude.Value.ToString().Replace(',','.'));
+            var longitude = @(Model.Longitude == null ? 0 : Model.Longitude.Value.ToString().Replace(',','.'));
+
+            MapsGoogle.init(name, lat, longitude);
+        });
+    </script>
+}
+
+    <div class="page-content">
+        <!-- Confirm Alert -->
+        <div class="modal fade" id="deleteConfirmationDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="pos_middle">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <form asp-action="Delete" method="post">
+                            <div class="modal-body" style="padding: 20px 25px;">
+                                <br />
+                                <br />
+                                <center><i class="fa fa-check-circle-o fa-8x font-green"></i></center>
+                                <h4 class="text-center font-grey-gallery">
+                                    Delete this task?
+                                </h4>
+                                <br />
+                                <input type="hidden" name="id" value="@Model.AssignmentId" />
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button type="submit" class="btn btn-block green uppercase">Yes</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-block red uppercase" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+        <!-- BEGIN PAGE HEADER-->
+        <!-- BEGIN PAGE BREADCRUMB -->
+        <ul class="page-breadcrumb breadcrumb">
+            <li>
+                <a href="@SiteHelper.GetBaseUrl(this.Context.Request)/home/index">Home</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="@SiteHelper.GetBaseUrl(this.Context.Request)/taskmanagement/index">Task</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="#">Task Details</a>
+            </li>
+        </ul>
+        <!-- END PAGE BREADCRUMB -->
+        <!-- BEGIN PAGE HEAD -->
+        <div class="page-head">
+            <!-- BEGIN PAGE TITLE -->
+            <div class="page-title" style="margin-left: 12px;">
+                <h1>Task Management</h1>
+            </div>
+            <!-- END PAGE TITLE -->
+        </div>
+        <!-- END PAGE HEAD -->
+        <!-- END PAGE HEADER-->
+        <!-- BEGIN PAGE CONTENT-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content-detail" style="width:100%; float:left;">
+                    
+                    <!-- Task Item Detail -->
+                    <div class="portlet light bordered">
+                        <div class="portlet-title">
+                            @*<div class="caption">
+                                <span class="caption-subject bold uppercase">Task Item</span>
+                            </div>*@
+                            <div class="col-md-2 margin-top-10 bold">
+                                <p class="no-margin font-18">
+                                    #@Model.AssignmentCode
+                                </p>
+                            </div>
+                            <div class="col-md-1 margin-top-10">
+                                @if (Model.Status == "RECEIVED")
+                                {
+                                    <p class="no-margin badge">
+                                        @Model.Status
+                                    </p>
+                                }
+                                else if (Model.Status == "COMPLETED")
+                                {
+                                    <p class="no-margin badge badge-success">
+                                        @Model.Status
+                                    </p>
+
+                                } else
+                                {
+                                    <p class="no-margin badge badge-default">
+                                        @Model.Status
+                                    </p>
+
+                                }
+                                
+                            </div>
+                            <div class="text-right col-md-9">
+                                <div class="col-md-12">
+                                    <a href="#" class="btn red @(Model.AssignmentStatusCode == "TASK_COMPLETED"  || Model.AssignmentStatusCode == "AGENT_STARTED"? "disabled" : "")" data-toggle="modal" data-target="#deleteConfirmationDialog" style="margin: 0 0 0 0;"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                    <a href="@SiteHelper.GetBaseUrl(this.Context.Request)/taskmanagement/edit/@Model.AssignmentId" class="btn green @(Model.AssignmentStatusCode == "TASK_COMPLETED" || Model.AssignmentStatusCode == "AGENT_STARTED"? "disabled" : "")"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="portlet-body form sidebar-form-static">
+                            <div class="tabbable tabbable-tabdrop">
+                                <ul class="nav nav-tabs cust-tabs2">
+                                    <li class="active">
+                                        <a href="#tab0" data-toggle="tab">Info</a>
+                                    </li>
+                                    <li>
+                                        <a href="#tab1" data-toggle="tab">Invoices</a>
+                                    </li>
+                                    <li>
+                                        <a href="#tab2" data-toggle="tab">Orders</a>
+                                    </li>
+                                    <li>
+                                        <a href="#tab3" data-toggle="tab">Payment</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade active in" id="tab0">
+                                        <div class="portlet-body form sidebar-form-static">
+                                            <!-- BEGIN FORM-->
+                                            <form action="#" class="form-horizontal">
+                                                <div class="form-body col-md-6">
+                                                    <div class="row">
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-12">Name</label>
+                                                                <div class="col-md-12">
+                                                                    <p class="form-control-static no-margin">
+                                                                        @Model.AssignmentName
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-12">Task Code</label>
+                                                                <div class="col-md-12">
+                                                                    <p class="form-control-static no-margin">
+                                                                        @Model.AssignmentCode
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-12">Assignment Date</label>
+                                                                <div class="col-md-12">
+                                                                    <p class="form-control-static no-margin">
+                                                                        @Model.AssignmentDate.ToUtcID().ToString("dd/MM/yyyy HH:mm:ss")
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-12">Address</label>
+                                                                <div class="col-md-12">
+                                                                    <p class="form-control-static no-margin">
+                                                                        @Model.AssignmentAddress
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-12">Start Time</label>
+                                                                <div class="col-md-12">
+                                                                    <p class="form-control-static no-margin">
+                                                                        @(Model.StartTime != null && !Model.StartTime.ToString("dd/MM/yyyy").Equals("01/01/0001") ? Model.StartTime.ToUtcID().ToString("dd/MM/yyyy HH:mm:ss") : "Belum dimulai")
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-12">End Time</label>
+                                                                <div class="col-md-12">
+                                                                    <p class="form-control-static no-margin">
+                                                                        @(Model.EndTime != null ? Model.EndTime.Value.ToUtcID().ToString("dd/MM/yyyy HH:mm:ss") : "Task belum diselesaikan")
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-12">Agen Code</label>
+                                                                <div class="col-md-12">
+                                                                    <p class="form-control-static no-margin">
+                                                                        @Model.AgentCode
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-12">Agen Name</label>
+                                                                <div class="col-md-12">
+                                                                    <p class="form-control-static no-margin">
+                                                                        @Model.AgentName
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-grup">
+                                                            <label class="control-label col-md-12">Note</label> 
+                                                            <div class="col-md-12">
+                                                                <p class="form-control-static no-margin">
+                                                                    @Model.Remarks
+                                                                </p>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="portlet-body form sidebar-form-static col-md-6 margin-top-10">
+                                                    <div id="task-map" class="gmaps">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <!-- END FORM-->
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane fade" id="tab1">
+                                        <div class="portlet-body cust-table">
+                                            <div class="table-scrollable">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align: center">
+                                                                No
+                                                            </th>
+                                                            <th>
+                                                                Invoice Code
+                                                            </th>
+                                                            <th style="min-width: 150px;">
+                                                                Nominal
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @if (Model.Invoices != null && Model.Invoices.Count > 0)
+                                                        {
+                                                            int i = 0;
+                                                            foreach (var item in Model.Invoices)
+                                                            {
+                                                                i++;
+                                                                <tr>
+                                                                    <td align="center">@i</td>
+                                                                    <td>@item.InvoiceCode</td>                                                             
+                                                                    <td>@item.Amount.ToString("C", CultureInfo.CreateSpecificCulture("id-ID."))</td>
+                                                                </tr>
+                                                            }
+
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="tab2">
+                                        <div class="portlet-body cust-table">
+                                            <div class="table-scrollable">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align: center">
+                                                                No
+                                                            </th>
+                                                            <th style="max-width: 100px;">
+                                                                Product Code
+                                                            </th>
+                                                            <th>
+                                                                Product Name
+                                                            </th>
+                                                            <th style="min-width: 150px;">
+                                                                Price
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @if (Model.Orders != null && Model.Orders.Count > 0)
+                                                        {
+                                                            int i = 0;
+                                                            foreach (var item in Model.Orders)
+                                                            {
+                                                                i++;
+                                                                <tr>
+                                                                    <td align="center">@i</td>
+                                                                    <td>
+                                                                        <div class="status grey-cascade">
+                                                                            <i class="fa fa-circle"></i> @item.ProductCode
+                                                                        </div>
+                                                                    </td>
+                                                                    <td align="center">@item.ProductName</td>
+                                                                    <td>@item.ProductAmount.ToString("C", new CultureInfo("id-ID"))</td>
+                                                                </tr>
+                                                            }
+
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="tab3">
+                                        <div class="portlet-body cust-table">
+                                            <div class="table-scrollable">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align: center">
+                                                                No
+                                                            </th>
+                                                            <th>
+                                                                Invoice Code
+                                                            </th>
+                                                            <th>
+                                                                Payment Method
+                                                            </th>
+                                                            <th style="min-width: 150px;">
+                                                                Amount
+                                                            </th>
+                                                            <th style="min-width: 150px;">
+                                                                Payment Debt
+                                                            </th>
+                                                            <th style="min-width: 150px;">
+                                                                Transfer date
+                                                            </th>
+                                                            <th style="max-width: 75px;">
+                                                                Giro due date
+                                                            </th>
+                                                            <th style="max-width: 75px;">
+                                                                Giro Photo
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @if (Model.Payments != null && Model.Payments.Count > 0)
+                                                        {
+                                                            int i = 0;
+                                                            foreach (var item in Model.Payments)
+                                                            {
+                                                                i++;
+                                                                <tr>
+                                                                    <td align="center">@i</td>
+                                                                    <td>
+                                                                        @item.InvoiceCode
+                                                                    </td>
+                                                                    <td align="center">@DataReference.PaymentChannelDic[item.PaymentChannel]</td>
+                                                                    <td>@item.PaymentAmount.ToString("C", new CultureInfo("id-ID"))</td>
+                                                                    <td>@item.PaymentDebt.ToString("C", new CultureInfo("id-ID"))</td>
+                                                                    <td>
+                                                                        @if (item.PaymentChannel == Trisatech.MWorkforce.Domain.Entities.PaymentChannel.Giro ||
+                                                                            item.PaymentChannel == Trisatech.MWorkforce.Domain.Entities.PaymentChannel.CashAndGiro ||
+                                                                            item.PaymentChannel == Trisatech.MWorkforce.Domain.Entities.PaymentChannel.TransferAndGiro ||
+                                                                            item.PaymentChannel == Trisatech.MWorkforce.Domain.Entities.PaymentChannel.CashAndTransferAndGiro)
+                                                                        {
+                                                                            <img src="@item.GiroPhoto" class="img-responsive" style="width:150px; height:auto" />
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Task on Map-->
+                    @*<div class="portlet light bordered">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <span class="caption-subject bold uppercase">Task location on map</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body form sidebar-form-static">
+                            <div id="task-map" class="gmaps">
+                            </div>
+                        </div>
+                    </div>*@
+
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE CONTENT-->
+    </div>

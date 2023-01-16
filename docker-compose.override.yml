@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  trisatech.mworkforce.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=;
+      - ApplicationSetting__GoogleMapsKey=
+    ports:
+      - "8001:80"
+      - "8002:443"
+  trisatech.mworkforce.cms:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=;
+      - Application_Setting__GoogleMapsKey=
+    ports:
+      - "9001:80"
+      - "9001:443"
+  trisatech.mworkforce.job:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=;
+    ports:
+      - "9001:80"
+      - "9001:443"
+

@@ -1,0 +1,202 @@
+﻿
+@model Trisatech.MWorkforce.Cms.ViewModels.OutletViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Outlet</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .label-pdf {
+            border-bottom: solid 1px #ccced1;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header style="border-bottom:solid 4px;">
+        <h1>Outlet Info</h1>
+        <h4>Sales Force Automatic</h4>
+    </header>
+    <div class="container">
+        <div class="row col-xs-12">
+            <div class="col-xs-6" style="margin-top:40px;">
+                <div class="form-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 label-pdf">Nama Toko</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.StoreName</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 label-pdf">Alamat Toko</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.StoreAddress</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 label-pdf">Kota/Kabupaten</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.StoreCity</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 label-pdf">Kecamatan</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.StoreDistrict</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 label-pdf">Kelurahan</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.StoreVillage</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6" style="margin-top:40px;">
+                <div class="form-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 label-pdf">Nama Pemilik</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.OwnerName</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 label-pdf">Nomor Telephone</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.OwnerPhoneNumber</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 label-pdf">Alamat</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.OwnerAddress</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 label-pdf">Kota/Kabupaten</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.OwnerCity</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 label-pdf">Kecamatan</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.OwnerDistrict</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 label-pdf">Kelurahan</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.OwnerVillage</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row col-xs-12">
+            <div class="col-xs-6" style="margin-top:40px;">
+                <div class="form-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-6 label-pdf">Penanggung Jawab</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.PICName</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-6 label-pdf">Nomor Telephone</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.PICPhoneNumber</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-6 label-pdf">Status Toko</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.StoreStatus</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-6 label-pdf">Lama Toko Berjualan</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.StoreAge</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-6 label-pdf">Jenis Toko</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.StoreType</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-6 label-pdf">Lebar Jalan</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.WidthRoad</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-6 label-pdf">Pelang/Branding</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.BrandingName</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-6 label-pdf">Catatan</label>
+                        <div class="col-md-5">
+                            <label class="control-label" style="color:black;">@Model.Note</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <!------------------------------------------------------------------------------------------------------------->
+            <div class="col-xs-6" style="margin-top:40px;">
+                <div class="form-group">
+                    <label class="control-label col-md-6 label-pdf">KTP & NPWP</label>
+                    <div class="col-md-5">
+                        <label class="control-label" style="color:black;"><img src="@Model.PhotoNPWPUrl" class="" style="width:auto; height: 200px;" /></label>
+                        <label class="control-label" style="color:black;"><img src="@Model.PhotoIdCardUrl" style="width:auto; height: 200px;" /></label>
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-6 label-pdf">Foto Toko</label>
+                    <div class="col-md-5">
+                        <label class="control-label" style="color:black;"><img src="@Model.StorePhotoUrl" class="img-responsive" style="width:auto; height: 200px;" /></label>
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html> 

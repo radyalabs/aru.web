@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  trisatech.mworkforce.api:
+    image: ${DOCKER_REGISTRY-}trisatechmworkforceapi
+    build:
+      context: .
+      dockerfile: Trisatech.MWorkforce.Api/Dockerfile
+  trisatech.mworkforce.cms:
+    image: ${DOCKER_REGISTRY-}trisatechmworkforcecms
+    build:
+      context: .
+      dockerfile: Trisatech.MWorkforce.Cms/Dockerfile
+  trisatech.mworkforce.job:
+    image: ${DOCKER_REGISTRY-}trisatechmworkforcejob
+    build:
+      context: .
+      dockerfile: Trisatech.MWorkforce.Job/Dockerfile

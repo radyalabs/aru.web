@@ -1,0 +1,284 @@
+﻿@using Trisatech.MWorkforce.Cms.Helpers
+
+@section Styles{
+	@*<link rel="stylesheet" type="text/css" href="~/lib/select2-old/select2.css" />*@
+	@*<link rel="stylesheet" type="text/css" href="~/lib/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css" />*@
+	<link rel="stylesheet" type="text/css" href="~/lib/plugins/dropzone/css/dropzone.css" />
+	<!--NEW UI-->
+	<link rel="stylesheet" type="text/css" href="~/Assets/global/css/plugins.css" />
+	<link rel="stylesheet" type="text/css" href="~/Assets/admin/css/custom.css" />
+}
+
+@section Scripts{
+	<!-- BEGIN PAGE LEVEL PLUGINS -->
+	<script type="text/javascript" src="~/lib/select2-old/select2.min.js"></script>
+	<script type="text/javascript" src="~/lib/plugins/datatables/media/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="~/lib/plugins/datatables/extensions/TableTools/js/dataTables.tableTools.min.js"></script>
+	<script type="text/javascript" src="~/lib/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js"></script>
+	<!-- END PAGE LEVEL PLUGINS -->
+	<script type="text/javascript" src="~/lib/plugins/dropzone/dropzone.js"></script>
+	<!-- END CORE PLUGINS -->
+	
+    <!--NEW UI-->
+	@*<script src="~/Assets/admin/scripts/table-advanced.js" type="text/javascript"></script>*@
+}
+
+@section CustomScripts{
+	<!--- BEGIN CUSTOM JAVASCRIPT -->
+	<script src="~/js/task-upload-datatable.js" type="text/javascript"></script>
+	<script>
+        var baseUrl = '@SiteHelper.GetBaseUrl(this.Context.Request)'
+	</script>
+	<script>
+		jQuery(document).ready(function () {
+			var taskListJson = null;
+			var taskList = null;
+
+			$('#btnSubmitTask').on('click', function () {
+
+				$('#progressDialog').modal('show');
+
+				console.log(JSON.stringify(taskList));
+
+				$.ajax({
+					type: "POST",
+					url: baseUrl + "/taskmanagement/process",
+					data: JSON.stringify(taskListJson),
+					contentType: "application/json; charset=utf-8",
+					dataType: "json",
+					success: function (result) {
+						if (result.success == true) {
+							$('#progressDialog').modal('hide');
+							$('#successDialog').modal('show');
+						} else {
+							$('#progressDialog').modal('hide');
+							$('#textErrorMessage').text(result.message);
+							$('#errorDialog').modal('show');
+						}
+					},
+					error: function (err) {
+						console.log(err);
+					}
+				});
+			});
+
+			//Dropzone Single Upload
+			$("#my-dropzone-single").dropzone({
+				maxFiles: 1,
+				acceptedFiles: ".csv",
+				init: function () {
+					this.on("maxfilesexceeded", function (file) {
+						this.removeAllFiles();
+						this.addFile(file);
+					});
+
+					this.on("addedfile", function (file) {
+						// Create the remove button
+						var removeButton = Dropzone.createElement("<button class='btn btn-padd1 red btn-trash-upload'><i class='fa fa-trash'></i> &nbsp Hapus File</button>");
+
+						// Capture the Dropzone instance as closure.
+						var _this = this;
+
+						// Capture Extenssion File
+						var ext = file.name.split('.').pop();
+						if (!file.type.match(/image.*/)) {
+							// This is not an image, so Dropzone doesn't create a thumbnail.
+							// Set a default thumbnail:
+							_this.emit("thumbnail", file, "/images/icon-doc.png");
+
+							// You could of course generate another image yourself here,
+							// and set it as a data url.
+						}
+
+						// Listen to the click event
+						removeButton.addEventListener("click", function (e) {
+							// Make sure the button click doesn't submit the form:
+							e.preventDefault();
+							e.stopPropagation();
+
+							// Remove the file preview.
+							_this.removeFile(file);
+							// If you want to the delete the file on the server as well,
+							// you can do the AJAX request here.
+						});
+
+						// Add the button to the file preview element.
+						file.previewElement.appendChild(removeButton);
+					});
+
+					this.on("success", function (file, response) {
+						if (response.success == true) {
+							var data = response.data;
+							taskList = response.data;
+							taskListJson = { data };
+							AssignmentTable.init(response.data, baseUrl)
+						} else {
+							console.log(response.success);
+							$('#textErrorMessage').text(response.message);
+							$('#errorDialog').modal('show');
+						}
+					});
+				}
+			});
+		});
+	</script>
+	<!-- END JAVASCRIPTS -->
+}
+
+@{
+	ViewData["Title"] = "Upload Tugas";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-content">
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="#">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Upload Tugas</a>
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    <div class="page-head">
+        <!-- BEGIN PAGE TITLE -->
+        <div class="page-title">
+            <h1>Upload Daftar Tugas Baru</h1>
+        </div>
+        <!-- END PAGE TITLE -->
+    </div>
+    <div class="modal fade" id="progressDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+        <div class="pos_middle">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body" style="padding: 20px 25px;">
+                        <br />
+                        <br />
+                        <center><i class="fa fa-gears fa-8x font-green"></i></center>
+                        <h4 class="text-center font-grey-gallery">
+                            Uploading to the server, please wait for it to finish.
+                        </h4>
+                        <br />
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div class="modal fade" id="successDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="pos_middle">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body" style="padding: 20px 25px;">
+                        <br />
+                        <br />
+                        <center><i class="fa fa-check-circle-o fa-8x font-green"></i></center>
+                        <h4 class="text-center font-grey-gallery">
+                            Import task has been completed.
+                        </h4>
+                        <br />
+                        <a href="@SiteHelper.GetBaseUrl(this.Context.Request)/taskmanagement/index" class="btn btn-padd2 btn-block grey-cascade uppercase no-margin">Lihat daftar tugas</a>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div class="modal fade" id="errorDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="pos_middle">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body" style="padding: 20px 25px;">
+                        <br />
+                        <br />
+                        <center><i class="fa fa-bug fa-8x font-red"></i></center>
+                        <h4 class="text-center font-grey-gallery" id="textErrorMessage"></h4>
+                        <br />
+                        <a href="@SiteHelper.GetBaseUrl(this.Context.Request)/taskmanagement/upload" class="btn btn-padd2 btn-block grey-cascade uppercase no-margin">Ulangi upload kunjungan</a>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- BEGIN PAGE CONTENT-->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject bold uppercase">Upload Daftar Tugas Baru</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <form asp-action="Upload" method="post" enctype="multipart/form-data" class="dropzone cust-dropzone" id="my-dropzone-single">
+                        <div class="dz-message">
+                            <i class="icon-cloud-upload"></i>
+                            Drop File Import Tugas disini<br>
+                            (atau klik disini untuk mencari file)
+                        </div>
+                    </form>
+                    <!-- <hr style="margin-top: 20px;" />
+                <button type="button" class="btn btn-padd2 blue btn-upload"><i class="fa fa-upload"></i> &nbsp Upload File Now</button> -->
+                </div>
+            </div>
+            <div class="portlet light bordered">
+                <div class="portlet-body form cust-table sidebar-form-static import">
+                    <hr />
+                    <a class="btn btn-padd2 bg-blue-soft pull-right" href="~/fileTemplate/AssignmentTemplateFile.csv">Download Bulk Assignment Template</a>
+                    <div class="portlet-body cust-table separate">
+                        <div class="table-scrollable">
+                            <table class="table table-hover datatable_default" id="taskTable">
+                                <thead>
+                                    <tr>
+                                        <th style="min-width: 75px">
+                                            Sales
+                                        </th>
+                                        <th style="min-width: 75px">
+                                            Date
+                                        </th>
+                                        <th style="min-width: 75px">
+                                            Customer Code
+                                        </th>
+                                        <th>
+                                            Customer Name
+                                        </th>
+                                        <th class="text-center">
+                                            No Faktur
+                                        </th>
+                                        <th style="min-width: 50px">
+                                            Jumlah
+                                        </th>
+                                        <th class="text-center">
+                                            Alamat
+                                        </th>
+                                        <th class="text-center">
+                                            Telpon
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="form-actions text-right">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a asp-action="Index" class="btn btn-padd2 grey-cascade">Cancel</a>
+                                <button type="submit" class="btn btn-padd2 green" id="btnSubmitTask">Upload Task</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE CONTENT-->
+</div>

@@ -1,0 +1,171 @@
+﻿@model Trisatech.MWorkforce.Cms.ViewModels.OutletViewModel
+@using Trisatech.MWorkforce.Business.Entities;
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CustomerModel> listcustomer = ViewBag.CustomerList;
+}
+
+@section CustomScripts{
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            var errorMessage = '@ViewBag.ErrorMessage';
+            if (errorMessage != '') {
+                $('#errMessageTxt').text(errorMessage);
+                $('#failedDialog').modal('show');
+            }
+        });
+    </script>
+}
+
+<div class="page-content">
+    <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+    <!-- Success Dialog -->
+    <div class="modal fade" id="failedDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="pos_middle">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body" style="padding: 20px 25px;">
+                        <br />
+                        <br />
+                        <center><i class="fa fa-frown-o fa-8x font-red"></i></center>
+                        <h4 class="text-center font-grey-gallery" id="errMessageTxt">
+                            Permitaan edit parameter <b>Periode Export - Import</b> telah berhasil di kirim ke Admin Cheker untuk melakukan review dan persetujuan
+                        </h4>
+                        <br />
+                        <a href="#" class="btn btn-padd2 btn-block grey-cascade uppercase no-margin" data-dismiss="modal" aria-hidden="true">Ok</a>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+    <!-- BEGIN PAGE HEADER-->
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="#">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Manage Outlet</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Add New Outlet</a>
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    <!-- BEGIN PAGE HEAD -->
+    <div class="page-head">
+        <!-- BEGIN PAGE TITLE -->
+        <div class="page-title">
+            <h1>Add New Outlet</h1>
+        </div>
+        <!-- END PAGE TITLE -->
+    </div>
+    <!-- END PAGE HEAD -->
+    <!-- END PAGE HEADER-->
+    <!-- BEGIN PAGE CONTENT-->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                <div class="portlet-body form">
+                    <form asp-action="create" class="form-horizontal form-row-seperated">
+                        <div class="form-body">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="StoreName" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="StoreName" class="form-control" />
+                                    <span asp-validation-for="StoreName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="StoreAddress" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="StoreAddress" class="form-control" />
+                                    <span asp-validation-for="StoreAddress" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="StoreCity" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="StoreCity" type="text" class="form-control" />
+                                    <span asp-validation-for="StoreCity" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="StoreDistrict" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="StoreDistrict" type="text" class="form-control" />
+                                    <span asp-validation-for="StoreDistrict" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="StoreVillage" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="StoreVillage" class="form-control" />
+                                    <span asp-validation-for="StoreVillage" class="text-danger"></span>
+                                    <span asp-validation-for="StoreVillage" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="StoreType" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="StoreType" class="form-control" />
+                                    <span asp-validation-for="StoreType" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="StoreAge" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="StoreAge" class="form-control" />
+                                    <span asp-validation-for="StoreAge" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="StoreStatus" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="StoreStatus" class="form-control" />
+                                    <span asp-validation-for="StoreStatus" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="StorePhotoUrl" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <input asp-for="StorePhotoUrl" class="form-control" />
+                                    <span asp-validation-for="StorePhotoUrl" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="CustomerId" class="control-label col-md-3"></label>
+                                <div class="col-md-5">
+                                    <select asp-for="CustomerId" class="form-control select2me"
+                                            data-placeholder="Select Customer"
+                                            asp-items="@(new SelectList(listcustomer, "CustomerId","CustomerName"))">
+                                        <option>Please select one</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <a class="btn btn-padd2 grey-cascade" asp-action="index">Cancel</a>
+                                    <button type="submit" class="btn btn-padd2 green" style="margin-left: 10px;">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- END FORM-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE CONTENT-->
+</div>

@@ -1,0 +1,422 @@
+@using Trisatech.MWorkforce.Cms.Helpers
+
+@{
+    ViewData["Title"] = "Laporan harian";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles{
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+<link rel="stylesheet" type="text/css" href="~/lib/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="~/lib/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" />
+}
+
+@section Scripts{
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script type="text/javascript" src="~/lib/plugins/datatables/media/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript"
+    src="~/lib/plugins/datatables/extensions/TableTools/js/dataTables.tableTools.min.js"></script>
+<script type="text/javascript" src="~/lib/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js"></script>
+<script type="text/javascript" src="~/lib/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+}
+
+@section CustomScripts{
+<script type="text/javascript">
+    var urlDataTable = '@SiteHelper.GetBaseUrl(this.Context.Request)/ajaxdatatable/newreport';
+    var baseUrl = '@SiteHelper.GetBaseUrl(this.Context.Request)';
+    var currentDate = '@ViewBag.CurrentDate';
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var currentDate = '@ViewBag.CurrentDate.ToString("yyyy-MM-dd")';
+        var table = $('#datatable-input').DataTable({
+            "ordering": false,
+            "searching": false,
+            "filtering": false
+        });
+
+        var counter = 1;
+
+        function getEmptyRow(){
+            return [
+            counter++,
+            `<input type="date" class="form-control" name="tgl" value="` + currentDate + `">`,
+            //'<input type="text" class="form-control" name="usercode" value="">',
+            //'<input type="text" class="form-control" name="username" value="">',
+            '<input type="text" class="form-control" name="outlet-code" value="">',
+            '<input type="text" class="form-control" name="outlet" value="">',
+            '<input type="number" class="form-control input-invoice-cash" name="invoice-cash" value="0">',
+            '<input type="number" class="form-control  input-invoice-transfer" name="invoice-transfer" value="0">',
+            '<input type="number" class="form-control  input-invoice-giro" name="invoice-giro" value="0">',
+            '<input type="text" class="form-control total-payment" name="invoice-total" readonly value="0">',
+            '<input type="number" class="form-control  input-order-type" name="order-type" value="0">',
+            '<input type="number" class="form-control  input-order-nominal" name="order-nominal" value="0">',
+            '<input type="text" class="form-control total-order" readonly name="order-total" value="0">',
+        ];
+        }
+
+        function buildRowFromData(item) {
+            return [
+            counter++,
+            `<input type="date" class="form-control" name="tgl" value="` + currentDate + `">`,
+            `<input type="text" class="form-control" name="outlet-code" value="` + item.customer_code + `">`,
+            `<input type="text" class="form-control" name="outlet" value="` + item.customer_name + `">`,
+            `<input type="number" class="form-control input-invoice-cash" name="invoice-cash" value="` + 0 + `">
+            <input type='hidden' name='invoice-value' value='` + item.invoice_amount + `'>`,
+            `<input type="number" class="form-control  input-invoice-transfer" name="invoice-transfer" value="` + 0 + `">`,
+            `<input type="number" class="form-control  input-invoice-giro" name="invoice-giro" value="` + 0 + `">`,
+            `<input type="text" class="form-control total-payment" name="invoice-total" readonly value="` + formatter.format(item.payment_amount) + `">`,
+            `<input type="number" class="form-control  input-order-type" name="order-type" value="` + 0 + `">`,
+            `<input type="number" class="form-control  input-order-nominal" name="order-nominal" value="` + 0 + `">`,
+            `<input type="text" class="form-control total-order" readonly name="order-total" value="0">`,
+        ];
+        }
+        
+        $('#saveData').click(function () {
+            console.log(table.data().serialize());
+            var multiArray = [];
+            var postData = {};
+            var postArrayData = [];
+
+            table.data().toArray().forEach(function(item, index, arr){
+                var dataItem = [];
+                item.forEach(function(itemDetail, indexDetail, arrDetail){
+                   var htmlObject = $(itemDetail);
+                   dataItem.push(htmlObject.serialize());
+                });
+
+                multiArray.push(dataItem);
+            });
+
+            for(let i = 0; i < multiArray.length; i++) {
+                postArrayData.push({
+                    date: multiArray[i][1].split("=")[1],
+                    outletCode: multiArray[i][2].split("=")[1],
+                    outletName: multiArray[i][3].split("=")[1],
+                    paymentCash: multiArray[i][4].split("&")[0].split("=")[1],
+                    invoiceValue: multiArray[i][4].split("&")[1].split("=")[1],
+                    paymentTransfer: multiArray[i][5].split("=")[1],
+                    paymentGiro: multiArray[i][6].split("=")[1],
+                    orderType: multiArray[i][8].split("=")[1],
+                    orderNominal: multiArray[i][9].split("=")[1],
+                });
+            }
+
+            postData = {
+                userId: $('select[name=UserId]').val(),
+                date: $('input[name=DateInput]').val(),
+                data: postArrayData
+            }
+
+            $.ajax({
+                type: "POST",
+                url: baseUrl + "/report/savedailyreport",
+                data: JSON.stringify(postData),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (result) {
+                    console.log(result);
+                    if (result.success == true) {
+                        $('#progressDialog').modal('hide');
+                        $('#successDialog').modal('show');
+                    } else {
+                        $('#progressDialog').modal('hide');
+                        $('#textErrorMessage').text(result.status);
+                        $('#errorDialog').modal('show');
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+
+            return false;
+        });
+
+        $('#addRow').on('click', function () {
+            table.row.add(getEmptyRow()).draw(true);
+            AddInputListener();
+        });
+
+        function AddInputListener(){
+            $('.input-invoice-cash').on('change', function(){
+                var tr = $(this).closest("tr");
+                var totalValue = getInvoiceValue(parseInt($(this).val()), tr, 1);
+                setValue(tr, ".total-payment", totalValue);
+                $(this).val(totalValue);
+            });
+            
+            $('.input-invoice-transfer').on('change', function(){
+                var tr = $(this).closest("tr");
+                var totalValue = getInvoiceValue(parseInt($(this).val()), tr, 2);
+                setValue(tr, ".total-payment", totalValue);
+                $(this).val(totalValue);
+            });
+
+            $('.input-invoice-giro').on('change', function(){
+                var tr = $(this).closest("tr");
+                var totalValue = getInvoiceValue(parseInt($(this).val()), tr, 3);
+                setValue(tr, ".total-payment", totalValue);
+                $(this).val(totalValue);
+            });
+
+            $('.input-order-type').on('change', function(){
+                var tr = $(this).closest("tr");
+                var totalValue = getOrderValue(parseInt($(this).val()), tr, 1);
+                setValue(tr, ".total-order", totalValue);
+                $(this).val(totalValue);
+            });
+
+            $('.input-order-nominal').on('change', function(){
+                var tr = $(this).closest("tr");
+                var totalValue = getOrderValue(parseInt($(this).val()), tr, 2);
+                setValue(tr, ".total-order", totalValue);
+            });
+        }
+
+        var formatter = new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        });
+
+        function setValue(trObject, className, value){
+            if(!value) {
+                value = 0;
+            }
+            trObject.find(className).val(formatter.format(value));
+        }
+
+        function getInvoiceValue(currentValue, trObject, inputValue) {
+            var totalValue = currentValue;
+
+            if(inputValue === 1){
+                totalValue += parseInt(trObject.find(".input-invoice-transfer").val());
+                totalValue += parseInt(trObject.find(".input-invoice-giro").val());
+            } else if(inputValue == 2) {
+                totalValue += parseInt(trObject.find(".input-invoice-cash").val());
+                totalValue += parseInt(trObject.find(".input-invoice-giro").val());
+            }else if(inputValue == 3) {
+                totalValue += parseInt(trObject.find(".input-invoice-cash").val());
+                totalValue += parseInt(trObject.find(".input-invoice-transfer").val());
+            }
+
+            return totalValue;
+        }
+
+        function getOrderValue(currentValue, trObject, inputValue) {
+            if(!currentValue){
+                currentValue = 0;
+            }
+            var totalValue = currentValue;
+
+            if(inputValue == 2){
+                totalValue += parseInt(trObject.find(".input-order-type").val());
+            } else if(inputValue == 1) {
+                totalValue += parseInt(trObject.find(".input-order-nominal").val());
+            }
+
+            return totalValue;
+        }
+
+        $('#btnSearch').on('click', function()
+        {
+            $('#progressDialog').modal('show');
+            var formData = $("#searchForm").serialize();
+            $.ajax({
+                type: "POST",
+                url: baseUrl + "/report/dailyreport",
+                data: formData,
+                success: function (result) {
+                    console.log(result);
+                    if (result.success == true) {
+                        $('#progressDialog').modal('hide');
+                        applyDataToTable(result.data);
+                    } else {
+                        $('#progressDialog').modal('hide');
+                        $('#textErrorMessage').text(result.message);
+                        $('#errorDialog').modal('show');
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+
+        function applyDataToTable(data){
+            table.row().remove().draw(false);
+            counter = 1;
+            if(data && data.visit_history) {
+                data.visit_history.forEach(function(item, index, arr){
+                    table.row.add(buildRowFromData(item)).draw(true);
+                    AddInputListener();
+                });
+            }
+        }
+
+        $('#addRow').click();
+    });
+</script>
+}
+
+<div class="page-content">
+    <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+    <div class="modal fade" id="progressDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+        <div class="pos_middle">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body" style="padding: 20px 25px;">
+                        <br />
+                        <br />
+                        <center><i class="fa fa-gears fa-8x font-green"></i></center>
+                        <h4 class="text-center font-grey-gallery">
+                            Getting data from server, please wait.
+                        </h4>
+                        <br />
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="successDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="pos_middle">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body" style="padding: 20px 25px;">
+                        <br />
+                        <br />
+                        <center><i class="fa fa-check-circle-o fa-8x font-green"></i></center>
+                        <h4 class="text-center font-grey-gallery">
+                            All data has been successfully saved.
+                        </h4>
+                        <br />
+                        <a href="@SiteHelper.GetBaseUrl(this.Context.Request)/report/dailyreport" class="btn btn-padd2 btn-block grey-cascade uppercase no-margin">Lihat daftar tugas</a>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="errorDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="pos_middle">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body" style="padding: 20px 25px;">
+                        <br />
+                        <br />
+                        <center><i class="fa fa-bug fa-8x font-red"></i></center>
+                        <h4 class="text-center font-grey-gallery" id="textErrorMessage"></h4>
+                        <br />
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- /.modal -->
+    <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+
+    <!-- BEGIN PAGE HEADER-->
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="@SiteHelper.GetBaseUrl(this.Context.Request)/home/index">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@SiteHelper.GetBaseUrl(this.Context.Request)/report/dailyreport">DailyReport</a>
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    <!-- BEGIN PAGE HEAD -->
+    <div class="page-head">
+        <!-- BEGIN PAGE TITLE -->
+        <div class="page-title">
+            <h1>@ViewData["Title"]
+                <!-- <small>blank page</small> -->
+            </h1>
+        </div>
+        <!-- END PAGE TITLE -->
+    </div>
+    <!-- END PAGE HEAD -->
+    <!-- END PAGE HEADER-->
+    <!-- BEGIN PAGE CONTENT-->
+    <div class="row">
+        <div class="com-md-12">
+            <form id="searchForm" action="#" class="portlet light bordered form-horizontal form-row-seperated">
+                <div class="form-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Pilih Tanggal</label>
+                        <div class="col-md-5">
+                            <input name="DateInput" type="date" class="form-control" value='@ViewBag.CurrentDate.ToString("yyyy-MM-dd")'></input>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Pilih User</label>
+                        <div class="col-md-5">
+                            <select name="UserId" class="form-control select2me" data-placeholder="Select contact"
+                                asp-items="@ViewBag.SalesList">
+                                <option>Please select one</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="form-actions">
+                    <div class="row">
+                        <div class="col-md-offset-2 col-md-5">
+                            <button id="btnSearch" type="button" class="btn btn-padd2 green" style="margin-left: 10px;">Cari</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                <div id="filterTable" class="filter-table">
+                    <div class="input-group" style="width:10%; float:right;">
+                        <button id="addRow" class="btn btn-primary">Tambah data</button>
+                    </div>
+                    <div class="input-group" style="width:10%; float:right;">
+                        <button id="saveData" class="btn btn-success" style="margin-right: 20px;">Simpan data</button>
+                    </div>
+                    <table id="datatable-input" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" width="50px">No</th>
+                                <th rowspan="2" width="100px">Tanggal</th>
+                                @* <th rowspan="2" width="100px">Kode User</th> *@
+                                @* <th rowspan="2">Name</th> *@
+                                <th rowspan="2" width="80px">Kode Toko</th>
+                                <th rowspan="2" width="100px">Toko</th>
+                                <th colspan="4" style="text-align: center;">Tagihan</th>
+                                <th colspan="3" style="text-align: center;">Penjualan</th>
+                            </tr>
+                            <tr>
+                                <th width="100px">Cash</th>
+                                <th width="100px">Transfer</th>
+                                <th width="100px">Giro</th>
+                                <th width="100px">Total</th>
+                                <th width="100px">Jenis</th>
+                                <th width="100px">Nominal</th>
+                                <th width="100px">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE CONTENT-->
+</div>

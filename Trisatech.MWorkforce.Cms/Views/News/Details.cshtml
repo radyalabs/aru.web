@@ -1,0 +1,139 @@
+﻿@model Trisatech.MWorkforce.Cms.ViewModels.NewsViewModel
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form asp-action="delete">
+    <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="pos_middle">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body" style="padding: 20px 25px;">
+                        <h4 class="text-center font-grey-gallery" style="font-weight: 600;">Are you sure to delete this ?</h4>
+                        <br />
+                        <input type="hidden" value="@Model.NewsId" name="id" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-block green uppercase" data-backdrop="static" data-keyboard="false">Yes</button>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="#" class="btn btn-block red uppercase" data-backdrop="static" data-keyboard="false" data-dismiss="modal">No</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</form>
+<div class="page-content">
+    <!-- BEGIN PAGE HEADER-->
+    <!-- BEGIN PAGE HEAD -->
+    
+    
+    <!-- END PAGE HEAD -->
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a asp-action="Index">Manage News</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a asp-controller="Survey" asp-action="Details" asp-route-id=""></a>
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    <!-- BEGIN PAGE TITLE -->
+    <div class="page-head">
+        <div class="page-title">
+            <h1>Detail News</h1>
+        </div>
+    </div>
+        <!-- END PAGE TITLE -->
+        <!-- END PAGE HEADER-->
+        <!-- BEGIN PAGE CONTENT-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="portlet light bordered">
+                    @*<div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject bold ">News</span>
+                        </div>
+                    </div>*@
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="content-detail">
+                                <!-- Data User -->
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title  text-right">
+                                        <!-- ACTION BUTTON-->
+                                        <div class="caption col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <a class="btn btn-padd2 red" data-backdrop="static" data-keyboard="false" data-dismiss="modal" data-toggle="modal" data-target="#confirmDelete" href="#confirmDelete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                    <a class="btn btn-padd2 green" asp-action="edit" asp-controller="news" asp-route-id="@Model.NewsId"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--END ACTION BUTTON-->
+                                    </div>
+                                    <div class="portlet-body form">
+                                        <!-- BEGIN FORM-->
+                                        <form action="#" class="form-horizontal">
+                                            <div class="portlet-body form">
+                                                <div class="form-horizontal form-row-seperated">
+                                                    <div class="form-body">
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">Name</label>
+                                                            <div class="col-md-5">
+                                                                <label class="control-label" style="color:black;">@Html.DisplayFor(model => model.Title)</label>
+                                                                <span class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">Published Date</label>
+                                                            <div class="col-md-5">
+                                                                <label class="control-label" style="color:black;">@Model.PublishedDate.ToUtcID()</label>
+                                                                <span class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">Description</label>
+                                                            <div class="col-md-5">
+                                                                <label class="control-label" style="color:black;">@Html.DisplayFor(model => model.Desc)</label>
+                                                                <span class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">Content</label>
+                                                            <div class="col-md-5">
+                                                                <label class="control-label" style="color:black;">@Html.DisplayFor(model => model.Content)</label>
+                                                                <span class="text-danger"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-actions text-right">
+                                                <div class="row">
+                                                    <div class="col-md-offset-3 col-md-9">
+                                                        <a class="btn btn-padd2 grey-cascade" asp-action="index">Back</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <!-- END FORM-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE CONTENT-->
+    </div>
